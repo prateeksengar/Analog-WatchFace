@@ -1,0 +1,20 @@
+{
+  "fitbit": {
+    "appUUID": "437b394c-cfa2-4cd5-b70c-be6fa6a31edb",
+    "appType": "clockface",
+    "appDisplayName": "Minimalist Analog",
+    "iconFile": "resources/icon.png",
+    "wipeColor": "",
+    "requestedPermissions": [
+      "access_activity"
+    ],
+    "buildTargets": [
+      "meson"
+    ],
+    "i18n": {
+      "en": {
+        "name": "Minimalist Analog"
+      }
+    }
+  }
+}
