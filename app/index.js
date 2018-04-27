@@ -1,8 +1,10 @@
+import { me } from "appbit";
 import clock from "clock";
 import document from "document";
 import { today } from "user-activity";
 import * as messaging from "messaging";
 import * as util from "../common/utils";
+import * as fs from "fs";
 
 // Update the clock every second
 clock.granularity = "seconds";
