@@ -7,6 +7,10 @@ import * as util from "../common/utils";
 // Update the clock every second
 clock.granularity = "seconds";
 
+//constants
+const SETTINGS_TYPE = "cbor";
+const SETTINGS_FILE = "settings.cbor";
+
 //get interface elements
 let hourHand = document.getElementById("hours");
 let minHand = document.getElementById("mins");
@@ -17,36 +21,39 @@ let calCount = document.getElementById("myCal");
 let stepsCount = document.getElementById("mySteps");
 let myBG = document.getElementById("myBG");
 
+//load settings and apply
+let settings = loadSettings();
+updateBackground(settings);
 
 //get setting event
-messaging.peerSocket.onmessage = (evt) => updateBackground(evt);
-
+messaging.peerSocket.onmessage = (evt) => 
+{
+  updateBackground(evt.data.value);
+}
 // Update the clock every tick event
 clock.ontick = () => updateClock();
 
 
 //update clock background based on preference
-function updateBackground(evt)
+function updateBackground(selectedColor)
 {
-  //get selectedColor
-  var selectedColor = evt.data.value;
-  
   switch(selectedColor) {
     case "slategray":
-      myBG.href = "GreyAnalog.png";
+      myBG.href = "GreyAnalog.jpg";
       break;
     case "black":
       myBG.href = "blackAnalog.jpg";
       break;
     case "steelblue":
-      myBG.href = "BlueAnalog.png";
+      myBG.href = "BlueAnalog.jpg";
       break;
     case "grey":
-      myBG.href = "SlateAnalog.png";
+      myBG.href = "DenimAnalog.jpg";
       break;
     default:
       myBG.href = "blackAnalog.jpg";
   }
+  settings = selectedColor;
 }
 
 
@@ -94,11 +101,31 @@ function updateClock() {
   {
     hours = 12;
   }
+  
+  // daily activity every 10 seconds
+updateDailyActivity();
 
 }
 
-// daily activity every 10 seconds
-updateDailyActivity();
-// Set Interval to update battery percentage every minute
-setInterval(updateDailyActivity, 10000);
+// Register for the unload event
+me.onunload = saveSettings;
+
+//load settings from file
+function loadSettings()
+{
+  try{
+    return fs.readFileSync(SETTINGS_FILE, SETTINGS_TYPE);
+  }
+  catch(ex)
+    {
+      return "black";
+    }
+  
+}
+
+//save selected settings into file
+function saveSettings()
+{
+  fs.writeFileSync(SETTINGS_FILE, settings, SETTINGS_TYPE);
+}
 
